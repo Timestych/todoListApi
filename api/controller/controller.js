@@ -1,0 +1,71 @@
+'use strict';
+
+
+var mongoose = require('mongoose'),
+  Task = mongoose.model('Tasks'),
+  ProductId = mongoose.model('ProductIds');
+
+exports.list_all_tasks = function(req, res) {
+  Task.find({}, function(err, task) {
+    if (err)
+      res.send(err);
+    res.json(task);
+  });
+};
+
+exports.display_product_details = function(req,res){
+  ProductId.find({}, function(err,productId){
+    if(err)
+      res.send(err);
+    res.json(productId);
+  });
+};
+
+
+exports.create_a_task = function(req, res) {
+  var new_task = new Task(req.body);
+  new_task.save(function(err, task) {
+    if (err)
+      res.send(err);
+    res.json(task);
+  });
+};
+
+exports.set_product_details = function(req,res){
+  var new_productId = new ProductId(req.body);
+  new_productId.save(function(err,productId){
+    if(err)
+      res.send(err);
+    res.json(productId);
+  });
+};
+
+exports.read_a_task = function(req, res) {
+  Task.findById(req.params.taskId, function(err, task) {
+    if (err)
+      res.send(err);
+    res.json(task);
+  });
+};
+
+
+exports.update_a_task = function(req, res) {
+  Task.findOneAndUpdate({_id: req.params.taskId}, req.body, {new: true}, function(err, task) {
+    if (err)
+      res.send(err);
+    res.json(task);
+  });
+};
+
+
+exports.delete_a_task = function(req, res) {
+  Task.remove({
+    _id: req.params.taskId
+  }, function(err, task) {
+    if (err)
+      res.send(err);
+    res.json({ message: 'Task successfully deleted' });
+  });
+
+
+};
